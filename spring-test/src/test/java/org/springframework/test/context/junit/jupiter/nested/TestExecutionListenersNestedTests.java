@@ -16,26 +16,17 @@
 
 package org.springframework.test.context.junit.jupiter.nested;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.NestedTestConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.junit.jupiter.nested.TestExecutionListenersNestedTests.FooTestExecutionListener;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.context.NestedTestConfiguration.EnclosingConfiguration.INHERIT;
-import static org.springframework.test.context.NestedTestConfiguration.EnclosingConfiguration.OVERRIDE;
 
 /**
  * Integration tests that verify support for {@code @Nested} test classes using
@@ -45,9 +36,6 @@ import static org.springframework.test.context.NestedTestConfiguration.Enclosing
  * @author Sam Brannen
  * @since 5.3
  */
-@SpringJUnitConfig
-@TestExecutionListeners(FooTestExecutionListener.class)
-@NestedTestConfiguration(OVERRIDE) // since INHERIT is now the global default
 class TestExecutionListenersNestedTests {
 
 	private static final String FOO = "foo";
@@ -63,20 +51,8 @@ class TestExecutionListenersNestedTests {
 		listeners.clear();
 	}
 
-	@Test
 	void test() {
 		assertThat(listeners).containsExactly(FOO);
-	}
-
-
-	@Nested
-	@NestedTestConfiguration(INHERIT)
-	class InheritedConfigTests {
-
-		@Test
-		void test() {
-			assertThat(listeners).containsExactly(FOO);
-		}
 	}
 
 	// -------------------------------------------------------------------------
