@@ -68,19 +68,17 @@ class SpringFactoriesLoaderTests {
 	}
 
 
-	@Test
+
 	void loadFactoryNames() {
 		List<String> factoryNames = SpringFactoriesLoader.loadFactoryNames(DummyFactory.class, null);
 		assertThat(factoryNames).containsExactlyInAnyOrder(MyDummyFactory1.class.getName(), MyDummyFactory2.class.getName());
 	}
 
-	@Test
 	void loadWhenNoRegisteredImplementationsReturnsEmptyList() {
 		List<Integer> factories = SpringFactoriesLoader.forDefaultResourceLocation().load(Integer.class);
 		assertThat(factories).isEmpty();
 	}
 
-	@Test
 	void loadWhenDuplicateRegistrationsPresentReturnsListInCorrectOrder() {
 		List<DummyFactory> factories = SpringFactoriesLoader.forDefaultResourceLocation().load(DummyFactory.class);
 		assertThat(factories).hasSize(2);
@@ -88,7 +86,6 @@ class SpringFactoriesLoaderTests {
 		assertThat(factories.get(1)).isInstanceOf(MyDummyFactory2.class);
 	}
 
-	@Test
 	void loadWhenPackagePrivateFactory() {
 		List<DummyPackagePrivateFactory> factories =
 				SpringFactoriesLoader.forDefaultResourceLocation().load(DummyPackagePrivateFactory.class);
@@ -96,7 +93,6 @@ class SpringFactoriesLoaderTests {
 		assertThat(Modifier.isPublic(factories.get(0).getClass().getModifiers())).isFalse();
 	}
 
-	@Test
 	void loadWhenIncompatibleTypeThrowsException() {
 		assertThatIllegalArgumentException()
 			.isThrownBy(() -> SpringFactoriesLoader.forDefaultResourceLocation().load(String.class))
@@ -104,7 +100,6 @@ class SpringFactoriesLoaderTests {
 					+ "[org.springframework.core.io.support.MyDummyFactory1] for factory type [java.lang.String]");
 	}
 
-	@Test
 	void loadWithLoggingFailureHandlerWhenIncompatibleTypeReturnsEmptyList() {
 		Log logger = mock(Log.class);
 		FailureHandler failureHandler = FailureHandler.logging(logger);
@@ -112,7 +107,6 @@ class SpringFactoriesLoaderTests {
 		assertThat(factories).isEmpty();
 	}
 
-	@Test
 	void loadWithArgumentResolverWhenNoDefaultConstructor() {
 		ArgumentResolver resolver = ArgumentResolver.of(String.class, "injected");
 		List<DummyFactory> factories = SpringFactoriesLoader.forDefaultResourceLocation(LimitedClassLoader.constructorArgumentFactories)
@@ -124,7 +118,6 @@ class SpringFactoriesLoaderTests {
 		assertThat(factories).extracting(DummyFactory::getString).containsExactly("Foo", "Bar", "injected");
 	}
 
-	@Test
 	void loadWhenMultipleConstructorsThrowsException() {
 		ArgumentResolver resolver = ArgumentResolver.of(String.class, "injected");
 		assertThatIllegalArgumentException()
@@ -135,7 +128,6 @@ class SpringFactoriesLoaderTests {
 				.havingRootCause().withMessageContaining("Class [org.springframework.core.io.support.MultipleConstructorArgsDummyFactory] has no suitable constructor");
 	}
 
-	@Test
 	void loadWithLoggingFailureHandlerWhenMissingArgumentDropsItem() {
 		Log logger = mock(Log.class);
 		FailureHandler failureHandler = FailureHandler.logging(logger);
@@ -146,7 +138,6 @@ class SpringFactoriesLoaderTests {
 		assertThat(factories.get(1)).isInstanceOf(MyDummyFactory2.class);
 	}
 
-	@Test
 	void loadFactoriesLoadsFromDefaultLocation() {
 		List<DummyFactory> factories = SpringFactoriesLoader.loadFactories(
 				DummyFactory.class, null);
@@ -155,14 +146,12 @@ class SpringFactoriesLoaderTests {
 		assertThat(factories.get(1)).isInstanceOf(MyDummyFactory2.class);
 	}
 
-	@Test
 	void loadForResourceLocationWhenLocationDoesNotExistReturnsEmptyList() {
 		List<DummyFactory> factories = SpringFactoriesLoader.forResourceLocation(
 				"META-INF/missing/missing-spring.factories").load(DummyFactory.class);
 		assertThat(factories).isEmpty();
 	}
 
-	@Test
 	void loadForResourceLocationLoadsFactories() {
 		List<DummyFactory> factories = SpringFactoriesLoader.forResourceLocation(
 				"META-INF/custom/custom-spring.factories").load(DummyFactory.class);
@@ -170,7 +159,6 @@ class SpringFactoriesLoaderTests {
 		assertThat(factories.get(0)).isInstanceOf(MyDummyFactory1.class);
 	}
 
-	@Test
 	void sameCachedResultIsUsedForDefaultClassLoaderAndNullClassLoader() {
 		SpringFactoriesLoader forNull = SpringFactoriesLoader.forDefaultResourceLocation(null);
 		SpringFactoriesLoader forDefault = SpringFactoriesLoader.forDefaultResourceLocation(ClassUtils.getDefaultClassLoader());
@@ -181,7 +169,6 @@ class SpringFactoriesLoaderTests {
 	@Nested
 	class FailureHandlerTests {
 
-		@Test
 		void throwingReturnsHandlerThatThrowsIllegalArgumentException() {
 			FailureHandler handler = FailureHandler.throwing();
 			RuntimeException cause = new RuntimeException();
@@ -190,7 +177,6 @@ class SpringFactoriesLoaderTests {
 					cause)).withMessageStartingWith("Unable to instantiate factory class").withCause(cause);
 		}
 
-		@Test
 		void throwingWithFactoryReturnsHandlerThatThrows() {
 			FailureHandler handler = FailureHandler.throwing(IllegalStateException::new);
 			RuntimeException cause = new RuntimeException();
@@ -199,7 +185,6 @@ class SpringFactoriesLoaderTests {
 					cause)).withMessageStartingWith("Unable to instantiate factory class").withCause(cause);
 		}
 
-		@Test
 		void loggingReturnsHandlerThatLogs() {
 			Log logger = mock(Log.class);
 			FailureHandler handler = FailureHandler.logging(logger);
@@ -208,7 +193,6 @@ class SpringFactoriesLoaderTests {
 			verify(logger).trace(isA(LogMessage.class), eq(cause));
 		}
 
-		@Test
 		void handleMessageReturnsHandlerThatAcceptsMessage() {
 			List<Throwable> failures = new ArrayList<>();
 			List<String> messages = new ArrayList<>();
@@ -229,7 +213,6 @@ class SpringFactoriesLoaderTests {
 	@Nested
 	class ArgumentResolverTests {
 
-		@Test
 		void ofValueResolvesValue() {
 			ArgumentResolver resolver = ArgumentResolver.of(CharSequence.class, "test");
 			assertThat(resolver.resolve(CharSequence.class)).isEqualTo("test");
@@ -237,7 +220,6 @@ class SpringFactoriesLoaderTests {
 			assertThat(resolver.resolve(Integer.class)).isNull();
 		}
 
-		@Test
 		void ofValueSupplierResolvesValue() {
 			ArgumentResolver resolver = ArgumentResolver.ofSupplied(CharSequence.class, () -> "test");
 			assertThat(resolver.resolve(CharSequence.class)).isEqualTo("test");
@@ -245,7 +227,6 @@ class SpringFactoriesLoaderTests {
 			assertThat(resolver.resolve(Integer.class)).isNull();
 		}
 
-		@Test
 		void fromAdaptsFunction() {
 			ArgumentResolver resolver = ArgumentResolver.from(
 					type -> CharSequence.class.equals(type) ? "test" : null);
@@ -254,7 +235,6 @@ class SpringFactoriesLoaderTests {
 			assertThat(resolver.resolve(Integer.class)).isNull();
 		}
 
-		@Test
 		void andValueReturnsComposite() {
 			ArgumentResolver resolver = ArgumentResolver.of(CharSequence.class, "test").and(Integer.class, 123);
 			assertThat(resolver.resolve(CharSequence.class)).isEqualTo("test");
@@ -262,13 +242,11 @@ class SpringFactoriesLoaderTests {
 			assertThat(resolver.resolve(Integer.class)).isEqualTo(123);
 		}
 
-		@Test
 		void andValueWhenSameTypeReturnsCompositeResolvingFirst() {
 			ArgumentResolver resolver = ArgumentResolver.of(CharSequence.class, "test").and(CharSequence.class, "ignore");
 			assertThat(resolver.resolve(CharSequence.class)).isEqualTo("test");
 		}
 
-		@Test
 		void andValueSupplierReturnsComposite() {
 			ArgumentResolver resolver = ArgumentResolver.of(CharSequence.class, "test").andSupplied(Integer.class, () -> 123);
 			assertThat(resolver.resolve(CharSequence.class)).isEqualTo("test");
@@ -276,13 +254,11 @@ class SpringFactoriesLoaderTests {
 			assertThat(resolver.resolve(Integer.class)).isEqualTo(123);
 		}
 
-		@Test
 		void andValueSupplierWhenSameTypeReturnsCompositeResolvingFirst() {
 			ArgumentResolver resolver = ArgumentResolver.of(CharSequence.class, "test").andSupplied(CharSequence.class, () -> "ignore");
 			assertThat(resolver.resolve(CharSequence.class)).isEqualTo("test");
 		}
 
-		@Test
 		void andResolverReturnsComposite() {
 			ArgumentResolver resolver = ArgumentResolver.of(CharSequence.class, "test").and(Integer.class, 123);
 			resolver = resolver.and(ArgumentResolver.of(CharSequence.class, "ignore").and(Long.class, 234L));
@@ -299,49 +275,42 @@ class SpringFactoriesLoaderTests {
 
 		private final ArgumentResolver resolver = ArgumentResolver.of(String.class, "test");
 
-		@Test
 		void defaultConstructorCreatesInstance() throws Exception {
 			Object instance = FactoryInstantiator.forClass(
 					DefaultConstructor.class).instantiate(this.resolver);
 			assertThat(instance).isNotNull();
 		}
 
-		@Test
 		void singleConstructorWithArgumentsCreatesInstance() throws Exception {
 			Object instance = FactoryInstantiator.forClass(
 					SingleConstructor.class).instantiate(this.resolver);
 			assertThat(instance).isNotNull();
 		}
 
-		@Test
 		void multiplePrivateAndSinglePublicConstructorCreatesInstance() throws Exception {
 			Object instance = FactoryInstantiator.forClass(
 					MultiplePrivateAndSinglePublicConstructor.class).instantiate(this.resolver);
 			assertThat(instance).isNotNull();
 		}
 
-		@Test
 		void multiplePackagePrivateAndSinglePublicConstructorCreatesInstance() throws Exception {
 			Object instance = FactoryInstantiator.forClass(
 					MultiplePackagePrivateAndSinglePublicConstructor.class).instantiate(this.resolver);
 			assertThat(instance).isNotNull();
 		}
 
-		@Test
 		void singlePackagePrivateConstructorCreatesInstance() throws Exception {
 			Object instance = FactoryInstantiator.forClass(
 					SinglePackagePrivateConstructor.class).instantiate(this.resolver);
 			assertThat(instance).isNotNull();
 		}
 
-		@Test
 		void singlePrivateConstructorCreatesInstance() throws Exception {
 			Object instance = FactoryInstantiator.forClass(
 					SinglePrivateConstructor.class).instantiate(this.resolver);
 			assertThat(instance).isNotNull();
 		}
 
-		@Test
 		void multiplePackagePrivateConstructorsThrowsException() {
 			assertThatIllegalStateException().isThrownBy(
 					() -> FactoryInstantiator.forClass(MultiplePackagePrivateConstructors.class))

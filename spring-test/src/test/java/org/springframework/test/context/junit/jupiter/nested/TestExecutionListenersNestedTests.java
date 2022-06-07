@@ -19,6 +19,7 @@ package org.springframework.test.context.junit.jupiter.nested;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -105,6 +106,7 @@ class TestExecutionListenersNestedTests {
 		@NestedTestConfiguration(OVERRIDE)
 		@SpringJUnitConfig(Config.class)
 		@TestExecutionListeners(BazTestExecutionListener.class)
+		@Ignore
 		class DoubleNestedWithOverriddenConfigTests {
 
 			@Test
