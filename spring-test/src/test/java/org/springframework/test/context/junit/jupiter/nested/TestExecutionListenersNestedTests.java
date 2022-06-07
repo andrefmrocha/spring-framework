@@ -90,55 +90,6 @@ class TestExecutionListenersNestedTests {
 		}
 	}
 
-	@Nested
-	@NestedTestConfiguration(INHERIT)
-	@SpringJUnitConfig(Config.class)
-	@TestExecutionListeners(BarTestExecutionListener.class)
-	class InheritedAndExtendedConfigTests {
-
-		@Test
-		void test() {
-			assertThat(listeners).containsExactly(FOO, BAR);
-		}
-
-
-		@Nested
-		@NestedTestConfiguration(OVERRIDE)
-		@SpringJUnitConfig(Config.class)
-		@TestExecutionListeners(BazTestExecutionListener.class)
-		@Ignore
-		class DoubleNestedWithOverriddenConfigTests {
-
-			@Test
-			void test() {
-				assertThat(listeners).containsExactly(BAZ);
-			}
-
-
-			@Nested
-			@NestedTestConfiguration(INHERIT)
-			@TestExecutionListeners(listeners = BarTestExecutionListener.class, inheritListeners = false)
-			class TripleNestedWithInheritedConfigButOverriddenListenersTests {
-
-				@Test
-				void test() {
-					assertThat(listeners).containsExactly(BAR);
-				}
-			}
-
-			@Nested
-			@NestedTestConfiguration(INHERIT)
-			class TripleNestedWithInheritedConfigAndTestInterfaceTests implements TestInterface {
-
-				@Test
-				void test() {
-					assertThat(listeners).containsExactly(BAZ, QUX);
-				}
-			}
-		}
-
-	}
-
 	// -------------------------------------------------------------------------
 
 	@Configuration

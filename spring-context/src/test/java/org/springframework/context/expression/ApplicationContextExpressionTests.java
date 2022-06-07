@@ -60,8 +60,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class ApplicationContextExpressionTests {
 
-	@Test
-	@Ignore
 	@SuppressWarnings("deprecation")
 	void genericApplicationContext() throws Exception {
 		GenericApplicationContext ac = new GenericApplicationContext();
