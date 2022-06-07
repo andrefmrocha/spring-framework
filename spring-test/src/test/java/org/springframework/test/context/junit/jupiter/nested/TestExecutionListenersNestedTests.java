@@ -79,17 +79,6 @@ class TestExecutionListenersNestedTests {
 		}
 	}
 
-	@Nested
-	@SpringJUnitConfig(Config.class)
-	@TestExecutionListeners(BarTestExecutionListener.class)
-	class ConfigOverriddenByDefaultTests {
-
-		@Test
-		void test() {
-			assertThat(listeners).containsExactly(BAR);
-		}
-	}
-
 	// -------------------------------------------------------------------------
 
 	@Configuration
