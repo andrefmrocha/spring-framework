@@ -298,6 +298,12 @@ configure([rootProject] + javaProjects) { project ->
 		systemProperty("io.netty.leakDetection.level", "paranoid")
 	}
 
+	test {
+		filter {
+			setFailOnNoMatchingTests(false)
+		}
+	}
+
 	checkstyle {
 		toolVersion = "10.1"
 		configDirectory.set(rootProject.file("src/checkstyle"))
