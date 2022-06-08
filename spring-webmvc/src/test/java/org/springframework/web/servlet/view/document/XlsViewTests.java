@@ -97,7 +97,6 @@ public class XlsViewTests {
 		assertThat(cell.getStringCellValue()).isEqualTo("Test Value");
 	}
 
-	@Test
 	@SuppressWarnings("resource")
 	public void testXlsxStreamingView() throws Exception {
 		View excelView = new AbstractXlsxStreamingView() {
