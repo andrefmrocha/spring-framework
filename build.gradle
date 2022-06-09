@@ -302,6 +302,9 @@ configure([rootProject] + javaProjects) { project ->
 		filter {
 			setFailOnNoMatchingTests(false)
 		}
+		outputs.upToDateWhen {
+			false
+		}
 	}
 
 	checkstyle {
